@@ -6,11 +6,16 @@ const app = express();
 
 app.get("/repo-size/:owner/:repo", async (req, res) => {
   const { owner, repo } = req.params;
+  const authHeader = req.headers["authorization"];
+  if (!authHeader) {
+    return res.status(401).send("Missing Authorization header");
+  }
 
   try {
     const ghRes = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
       headers: {
-        Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+        // Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+        Authorization: authHeader,
       },
     });
     const data = await ghRes.json();
@@ -89,4 +94,8 @@ font-family: "Space Grotesk", sans-serif;
   `;
 }
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+if (process.env.NODE_ENV !== "test") {
+  app.listen(3000, () => console.log("Server running on port 3000"));
+}
+
+export default app;
