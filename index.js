@@ -26,7 +26,7 @@ app.get("/repo-size/:owner/:repo", async (req, res) => {
     const svg = generateBadge("REPO SIZE", size);
 
     res.setHeader("Content-Type", "image/svg+xml");
-    res.setHeader("Cache-Control", "public, max-age=300");
+    res.setHeader("Cache-Control", "public, max-age=21600");
     res.send(svg);
   } catch (err) {
     res.status(500).send("Error generating badge");
